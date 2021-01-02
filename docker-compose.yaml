@@ -1,10 +1,23 @@
 version: "3"
+
 services:
   database:
     image: glassnode/code-challenge-2020-database:latest
+    container_name: glassnode_database
+    volumes:
+    - ./init.sql:/docker-entrypoint-initdb.d/init.sql    # executed on postgres database startup
     environment:
       POSTGRES_DB: eth
       POSTGRES_USER: test
       POSTGRES_PASSWORD: test
     ports:
       - "5432:5432"
+
+  server:
+    build:
+      context: .
+    container_name: glassnode_server
+    ports:
+      - 8080:8080
+    depends_on:
+      - "database"
